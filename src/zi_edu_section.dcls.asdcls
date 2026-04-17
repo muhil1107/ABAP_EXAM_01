@@ -1,0 +1,11 @@
+@EndUserText.label: 'Access Control for Section'
+@MappingRole: true
+define role ZI_EDU_SECTION {
+    grant
+        select
+            on
+                ZI_EDU_SECTION
+                    where
+                        inheriting conditions from entity ZC_EDU_SECTION;
+                        
+}

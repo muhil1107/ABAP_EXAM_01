@@ -1,0 +1,5 @@
+@EndUserText.label: 'Service Definition for School ERP'
+define service ZSD_EDU_SECTION {
+  expose ZC_EDU_SECTION as Section;
+  expose ZC_EDU_ATTEND  as Attendance;
+}

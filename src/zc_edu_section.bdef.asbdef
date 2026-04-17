@@ -1,0 +1,21 @@
+projection;
+strict ( 2 );
+
+define behavior for ZC_EDU_SECTION alias Section
+{
+  use create;
+  use update;
+  use delete;
+
+  use action lockSection;
+
+  use association _Attendance { create; }
+}
+
+define behavior for ZC_EDU_ATTEND alias Attendance
+{
+  use update;
+  use delete;
+
+  use association _Section;
+}

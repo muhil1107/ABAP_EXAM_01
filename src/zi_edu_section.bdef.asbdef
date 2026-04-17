@@ -1,0 +1,87 @@
+managed implementation in class ZBP_EDU_SECTION unique;
+strict ( 2 );
+
+define behavior for ZI_EDU_SECTION alias Section
+persistent table zedu_section
+lock master
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  /* Managed UUID numbering */
+  field ( numbering : managed, readonly ) SectionUuid;
+  field ( readonly ) Status, CreatedBy, CreatedAt, LastChangedBy,
+                     LastChangedAt, LocalLastChangedAt,
+                     PassPercentage, FailPercentage;
+
+  /* Standard CUD with instance features for parent */
+  create;
+  update ( features : instance );
+  delete ( features : instance );
+
+  /* Actions to Lock and Unlock a section */
+  action ( features : instance ) lockSection result [1] $self;
+  action ( features : instance ) unlockSection result [1] $self;
+
+  /* Auto-set default status to 'O' on creation */
+  determination setDefaultStatus on modify { create; }
+
+  /* Composition to child */
+  association _Attendance { create; }
+
+  mapping for zedu_section
+  {
+    SectionUuid        = section_uuid;
+    SectionId          = section_id;
+    CourseName         = course_name;
+    FacultyId          = faculty_id;
+    Status             = status;
+    PassPercentage     = pass_percentage;
+    FailPercentage     = fail_percentage;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_EDU_ATTEND alias Attendance
+persistent table zedu_attend
+lock dependent by _Section
+authorization dependent by _Section
+etag master LocalLastChangedAt
+{
+  field ( numbering : managed, readonly ) AttendUuid;
+
+  field ( readonly ) SectionUuid, CreatedBy, CreatedAt,
+                     LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  update ( features : instance );
+  delete ( features : instance );
+
+  validation validateRules on save { field Marks, ExamDate; create; update; }
+  determination calculatePercentages on save { create; update; delete; }
+
+  association _Section;
+
+  /* --- FIXED: CHILD SIDE EFFECTS --- */
+  /* If a user creates/deletes a student ($self) OR edits a Mark, refresh parent */
+  side effects {
+    $self affects field _Section.PassPercentage, field _Section.FailPercentage;
+    field Marks affects field _Section.PassPercentage, field _Section.FailPercentage;
+  }
+
+  mapping for zedu_attend
+  {
+    AttendUuid         = attend_uuid;
+    SectionUuid        = section_uuid;
+    ExamDate           = exam_date;
+    StudentId          = student_id;
+    Marks              = marks;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

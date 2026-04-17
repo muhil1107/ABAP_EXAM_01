@@ -1,0 +1,10 @@
+@EndUserText.label: 'Access Control for Attendance'
+@MappingRole: true
+define role ZI_EDU_ATTEND {
+    grant
+        select
+            on
+                ZI_EDU_ATTEND
+    where inheriting conditions from entity ZC_EDU_ATTEND;
+                        
+}

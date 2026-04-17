@@ -1,0 +1,75 @@
+@Metadata.layer: #CUSTOMER
+@UI.headerInfo: {
+  typeName:       'Section',
+  typeNamePlural: 'Sections',
+  title:          { type: #STANDARD, value: 'SectionId'  },
+  description:    { type: #STANDARD, value: 'CourseName' }
+}
+annotate view ZC_EDU_SECTION with
+{
+  /* --- FACET CONFIGURATION --- */
+  @UI.facet: [
+    {
+      id:       'SectionInfo',
+      purpose:  #STANDARD,
+      type:     #IDENTIFICATION_REFERENCE,
+      label:    'Section Details',
+      position: 10
+    },
+    {
+      id:       'AttendanceLine',
+      purpose:  #STANDARD,
+      type:     #LINEITEM_REFERENCE,
+      label:    'Exam Records',
+      position: 20,
+      targetElement: '_Attendance'
+    }
+  ]
+
+  
+  @UI.hidden: true  
+  @UI.lineItem:       [{ position: 50, type: #FOR_ACTION, dataAction: 'lockSection', label: 'Lock Section' }]
+  @UI.identification: [{ position: 50, type: #FOR_ACTION, dataAction: 'lockSection', label: 'Lock Section' }]
+  SectionUuid; 
+
+  @UI.selectionField: [{ position: 10 }]
+  @UI.lineItem:       [{ position: 10, label: 'Section ID' }]
+  @UI.identification: [{ position: 10, label: 'Section ID'  }]
+  SectionId;
+
+  @UI.lineItem:       [{ position: 20, label: 'Course Name' }]
+  @UI.identification: [{ position: 20, label: 'Course Name'  }]
+  CourseName;
+
+  @UI.lineItem:       [{ position: 30, label: 'Faculty ID' }]
+  @UI.identification: [{ position: 30, label: 'Faculty ID'  }]
+  FacultyId;
+
+  @UI.selectionField: [{ position: 20 }]
+  @UI.lineItem:       [{ position: 40, label: 'Status' }]
+  @UI.identification: [{ position: 40, label: 'Status'  }]
+  Status;
+
+  @UI.lineItem:       [{ position: 45, label: 'Pass %' }]
+  @UI.identification: [{ position: 45, label: 'Pass %'  }]
+  PassPercentage;
+
+  @UI.lineItem:       [{ position: 46, label: 'Fail %' }]
+  @UI.identification: [{ position: 46, label: 'Fail %'  }]
+  FailPercentage;
+
+  @UI.identification: [{ position: 60, label: 'Created By' }]
+  CreatedBy;
+
+  @UI.identification: [{ position: 70, label: 'Created On' }]
+  CreatedAt;
+
+  @UI.identification: [{ position: 80, label: 'Last Changed By' }]
+  LastChangedBy;
+
+  @UI.identification: [{ position: 90, label: 'Last Changed On' }]
+  LastChangedAt;
+
+  @UI.hidden: true 
+  LocalLastChangedAt; 
+}
